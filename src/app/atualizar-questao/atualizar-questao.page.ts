@@ -1,106 +1,56 @@
 import { Component, OnInit } from '@angular/core';
-import { QuestionDataService } from '../services/question-data.service';
 import { QuestaoCustom } from '../questao';
-import { AlertController } from '@ionic/angular';
-import { Router } from '@angular/router';
-import { ConfigSubjectService } from '../services/subject.service';
+import { QuestaoPage } from '../questao/questao.page';
 
 @Component({
   selector: 'app-atualizar-questao',
-  templateUrl: './atualizar-questao.page.html',
+  // templateUrl: './atualizar-questao.page.html',
+  templateUrl: '../questao/questao.page.html',
   styleUrls: ['./atualizar-questao.page.scss'],
 })
-export class AtualizarQuestaoPage implements OnInit {
+export class AtualizarQuestaoPage extends QuestaoPage implements OnInit {
 
-  private config;
-  qst: QuestaoCustom;
-  textoQuestao: string;
-
-  level: boolean;
-  niveis = ['1', '2', '3'];
-  categorias = ['Matemática', 'Biologia', 'Física',
-    'Química', 'Literatura', 'Inglês',
-    'História', 'Geografia', 'Artes'].sort();
-  categoria = '';
-  nivel = '1';
-
-  opcResp = '';
-  formRadio = [
-    { val: 'Alternativa 1', isChecked: true },
-    { val: 'Alternativa 2', isChecked: false },
-    { val: 'Alternativa 3', isChecked: false }
-  ];
-  alternativasResp: Array<string> = [];
-  rAlt0 = false;
-  rAlt1 = false;
-  rAlt2 = false;
-
-  textoLivre = '';
-
-  form = [
-    { val: 'Alternativa 1', isChecked: false },
-    { val: 'Alternativa 2', isChecked: false },
-    { val: 'Alternativa 3', isChecked: false }
-  ];
-
-  constructor(private qstDataService: QuestionDataService,
-    private alertCtrl: AlertController,
-    private router: Router,
-    private configService: ConfigSubjectService) {
-      this.configService.getInitConfig().subscribe(data => this.config = data);
-    }
+  private qst: QuestaoCustom;
 
   ngOnInit() {
-    console.log(this.qstDataService.data);
+    this.configService.getInitConfig().subscribe(data => this.config = data);
+
+    this.title = 'Atualizar Questão';
+    this.lQuestionText = 'Texto da questão:';
+    this.lCategoriaText = 'Categoria:';
+    this.createPage = false;
+    this.lTextoLivreText = 'Texto da resposta:';
+    this.buttonText = 'Atualizar';
+
     this.qst = this.qstDataService.data;
     this.textoQuestao = this.qst.textoQst;
     this.categoria = this.qst.categoria;
 
     if (this.qst.opcEscolha === 'unica') {
-      this.opcResp = this.qst.opcEscolha;
+      this.opcResposta = this.qst.opcEscolha;
       this.formRadio = this.qst.alternativas;
     } else if (this.qst.opcEscolha === 'multipla') {
-      this.opcResp = this.qst.opcEscolha;
-      this.form = this.qst.alternativas;
+      this.opcResposta = this.qst.opcEscolha;
+      this.formCheck = this.qst.alternativas;
     } else if (this.qst.opcEscolha === 'texto') {
-      this.opcResp = this.qst.opcEscolha;
+      this.opcResposta = this.qst.opcEscolha;
       this.textoLivre = this.qst.textoLivre;
     }
   }
 
   ionViewDidEnter() {
     this.level = this.config.level;
-    if(this.level) {
+    if (this.level) {
       this.nivel = this.qst.nivelDificuldade;
     }
   }
 
-  setRespAlternativa(value) {
-    for (let i in this.formRadio) {
-      if (i === value) {
-        this.formRadio[i].isChecked = true;
-      } else {
-        this.formRadio[i].isChecked = false;
-      }
-      console.log(this.formRadio[i]);
-    }
-  }
-
-  async showAlert(title: string, msg: string) {
-    const alerta = await this.alertCtrl.create({
-      header: title,
-      message: msg,
-      buttons: ['OK']
-    });
-    await alerta.present();
-  }
-
-  updateQuestion() {
+  actionQuestion() {
     if (this.textoQuestao === null || this.textoQuestao === '') {
       this.showAlert('Aviso!', 'Por favor, forneça um texto de questão válido.');
     } else if (this.categoria === null || this.categoria === '') {
       this.showAlert('Aviso!', 'Por favor, forneça uma categoria de resposta válida.');
-    } else if (this.opcResp === 'texto' && (this.textoLivre === null || this.textoLivre === '')) {
+    } else if (this.opcResposta === 'texto' && (this.textoLivre === null || this.textoLivre === '')) {
       this.showAlert('Aviso!', 'Por favor, forneça um texto de resposta válida.');
     } else {
 
@@ -110,17 +60,17 @@ export class AtualizarQuestaoPage implements OnInit {
       if (this.level) {
         this.qst.nivelDificuldade = this.nivel;
       }
-      if (this.opcResp === 'unica') {
+      if (this.opcResposta === 'unica') {
         this.qst.alternativas = this.formRadio;
         this.qst.textoLivre = null;
-      } else if (this.opcResp === 'texto') {
+      } else if (this.opcResposta === 'texto') {
         if (this.textoLivre === null || this.textoLivre === '') {
           this.showAlert('Aviso!', 'Por favor, forneça um texto de resposta válida.');
         }
         this.qst.alternativas = null;
         this.qst.textoLivre = this.textoLivre;
-      } else if (this.opcResp === 'multipla') {
-        this.qst.alternativas = this.form;
+      } else if (this.opcResposta === 'multipla') {
+        this.qst.alternativas = this.formCheck;
         this.qst.textoLivre = null;
       }
 
@@ -129,10 +79,11 @@ export class AtualizarQuestaoPage implements OnInit {
           this.qstDataService.itens[k] = this.qst;
         }
       }
-  
+
       console.log(this.qstDataService.itens);
       this.showAlert('Update', 'Questão atualizada com sucesso!');
       this.router.navigate(['tabs/pesquisar-questao']);
     }
   }
+
 }

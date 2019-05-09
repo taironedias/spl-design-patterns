@@ -4,42 +4,38 @@ import { QuestaoCustom } from '../questao';
 import { QuestionDataService } from '../services/question-data.service';
 import { Router } from '@angular/router';
 import { AlertController } from '@ionic/angular';
+import { AccessPage } from '../access/access.page';
 
 @Component({
   selector: 'app-access-key',
-  templateUrl: './access-key.page.html',
+  // template: `<app-access></app-access>`,
+  templateUrl: '../access/access.page.html',
+  // templateUrl: './access-key.page.html',
   styleUrls: ['./access-key.page.scss'],
 })
-export class AccessKeyPage implements OnInit {
+export class AccessKeyPage extends AccessPage implements OnInit {
 
-  nameStudant = '';
-  keyAcesso = '';
   ID = 0;
   flag = false;
 
-  constructor(private qstData: QuestionDataService,
-    private router: Router,
-    private alertCtrl: AlertController) { }
-
   ngOnInit() {
     this.valuesDefault();
+    this.title = 'Aluno';
+    this.labelText1 = 'Digite seu nome:';
+    this.labelText2 = 'Digite a chave de acesso:';
+    this.typeLabel2 = 'text';
+    this.buttonText = 'Fazer exame';
   }
 
-  resetValues() {
-    this.nameStudant = '';
-    this.keyAcesso = '';
-    this.ID = 0;
-    this.flag = false;
-  }
-
-  makeExame() {
-    if (this.nameStudant === '' || this.nameStudant === null) {
+  letsGO() {
+    console.log(this.label1);
+    if (this.label1 === '' || this.label1 === null) {
       this.showAlert('Aviso', 'O campo nome do aluno deve ser preenchido!');
-    } else if (this.keyAcesso === '' || this.keyAcesso === null) {
+    } else if (this.label2 === '' || this.label2 === null) {
       this.showAlert('Aviso', 'O campo chave do exame deve ser preenchido!');
     } else {
       for (const exame of this.qstData.examesArray) {
-        if (this.keyAcesso === exame.key) {
+        if (this.label2 === exame.key) {
           this.flag = true;
           break;
         }
@@ -50,62 +46,17 @@ export class AccessKeyPage implements OnInit {
         this.resetValues();
         this.router.navigate(['fazer-exame', this.ID]);
       } else {
-        this.keyAcesso = '';
+        this.label2 = '';
         this.showAlert('Aviso', 'A chave está incorreta. Tente novamente!');
       }
     }
   }
 
-  async showAlert(title: string, msg: string) {
-    const alerta = await this.alertCtrl.create({
-      header: title,
-      message: msg,
-      buttons: ['OK']
-    });
-    await alerta.present();
+  resetValues() {
+    this.label1 = '';
+    this.label2 = '';
+    this.ID = 0;
+    this.flag = false;
   }
 
-  valuesDefault() {
-    const qst = new QuestaoCustom();
-    qst.textoQst = 'Qual o time que mais vezes foi campeão brasileiro?';
-    qst.categoria = 'História';
-    qst.alternativas = [
-      { val: 'Bahia', isChecked: false },
-      { val: 'Palmeiras', isChecked: true },
-      { val: 'Grêmio', isChecked: false }
-    ];
-    qst.opcEscolha = 'unica';
-    qst.textoLivre = null;
-    qst.id = '1111';
-
-    const qst2 = new QuestaoCustom();
-    qst2.textoQst = 'Quais times vencedores da Libertadores?';
-    qst2.categoria = 'História';
-    qst2.alternativas = [
-      { val: 'Santos', isChecked: true },
-      { val: 'São Paulo', isChecked: true },
-      { val: 'Vitória', isChecked: false }
-    ];
-    qst2.opcEscolha = 'multipla';
-    qst2.textoLivre = null;
-    qst2.id = '2222';
-
-    const qst3 = new QuestaoCustom();
-    qst3.textoQst = 'Qual time foi campeão da Copa do Brasil de 2018?';
-    qst3.categoria = 'Física';
-    qst3.alternativas = null;
-    qst3.opcEscolha = 'texto';
-    qst3.textoLivre = 'Cruzeiro';
-    qst3.id = '3333';
-
-    const exame = new ExameCustom();
-    exame.nameExame = 'Default System';
-
-    exame.questoes.push(qst);
-    exame.questoes.push(qst2);
-    exame.questoes.push(qst3);
-    exame.key = 'mendouce';
-
-    this.qstData.examesArray.push(exame);
-  }
 }
