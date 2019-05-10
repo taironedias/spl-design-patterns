@@ -12,10 +12,10 @@ export class HomePage implements OnInit {
   private config;
 
   constructor(public router: Router,
-              private configService: ConfigSubjectService) {}
+              private configS: ConfigSubjectService) {}
 
   ngOnInit() {
-    this.configService.getInitConfig()
+    this.configS.getInitConfig()
       .subscribe(data => this.config = data);
   }
 
