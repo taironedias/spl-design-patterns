@@ -19,7 +19,7 @@ export class LoginPage extends AccessPage implements OnInit {
     this.buttonText = 'Acessar';
   }
 
-  letsGO() {
+  letsGo() {
     if (this.label1 === '') {
       this.showAlert('Aviso', 'Por favor, informe o seu username!');
     } else if (this.label2 === '') {

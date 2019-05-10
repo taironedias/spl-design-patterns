@@ -20,14 +20,13 @@ export abstract class AccessPage implements OnInit {
   protected typeLabel2: string;
   protected buttonText: string;
 
-
   constructor(protected qstData: QuestionDataService,
-    private alertCtrl: AlertController,
-    protected router: Router) { }
+              private alertCtrl: AlertController,
+              protected router: Router) { }
 
   ngOnInit() {}
 
-  abstract letsGO();
+  abstract letsGo();
   abstract resetValues();
 
   async showAlert(title: string, msg: string) {

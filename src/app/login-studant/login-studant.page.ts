@@ -1,14 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
-import { QuestionDataService } from '../services/question-data.service';
-import { QuestaoCustom } from '../questao';
-import { ExameCustom } from '../exame';
 import { AccessPage } from '../access/access.page';
 
 @Component({
   selector: 'app-login-studant',
-  // templateUrl: './login-studant.page.html',
   templateUrl: '../access/access.page.html',
   styleUrls: ['./login-studant.page.scss'],
 })
@@ -23,7 +17,7 @@ export class LoginStudantPage extends AccessPage implements OnInit {
     this.buttonText = 'Acessar';
   }
 
-  letsGO() {
+  letsGo() {
     if (this.label1 === '') {
       this.showAlert('Aviso', 'Por favor, informe o seu username!');
     } else if (this.label2 === '') {

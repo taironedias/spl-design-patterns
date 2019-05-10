@@ -1,9 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { ExameCustom } from '../exame';
-import { QuestaoCustom } from '../questao';
-import { QuestionDataService } from '../services/question-data.service';
-import { Router } from '@angular/router';
-import { AlertController } from '@ionic/angular';
 import { AccessPage } from '../access/access.page';
 
 @Component({
@@ -27,7 +22,7 @@ export class AccessKeyPage extends AccessPage implements OnInit {
     this.buttonText = 'Fazer exame';
   }
 
-  letsGO() {
+  letsGo() {
     console.log(this.label1);
     if (this.label1 === '' || this.label1 === null) {
       this.showAlert('Aviso', 'O campo nome do aluno deve ser preenchido!');
