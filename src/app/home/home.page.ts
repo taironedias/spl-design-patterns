@@ -11,7 +11,7 @@ export class HomePage implements OnInit {
 
   private config;
 
-  constructor(public router: Router, 
+  constructor(public router: Router,
               private configService: ConfigSubjectService) {}
 
   ngOnInit() {
