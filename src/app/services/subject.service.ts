@@ -14,3 +14,5 @@ export class ConfigSubjectService {
         return this.http.get<IConfig>(this.url);
     }
 }
+
+
